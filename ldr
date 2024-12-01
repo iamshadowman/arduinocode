@@ -1,0 +1,48 @@
+// Define the pin numbers
+const int ledPin = 9;      // Pin for LED
+const int ldrPin = A0;     // Pin for LDR (Analog input)
+const int fixedResistor = 10000;  // Fixed resistor value (10kΩ)
+
+// Variable to store the LDR value
+int ldrValue = 0;
+
+// Setup function to initialize the pin modes
+void setup() {
+  // Set the LED pin as an output
+  pinMode(ledPin, OUTPUT);
+  // Start the serial communication (optional for debugging)
+  Serial.begin(9600);
+}
+
+// Loop function where the LED brightness is controlled
+void loop() {
+  // Read the value from the LDR (0 to 1023)
+  ldrValue = analogRead(ldrPin);
+
+  // Read the voltage of the LDR
+  float ldrVoltage = ldrValue*(5.0/1023);
+  
+  // Calculate the resistance of the LDR using the voltage divider formula:
+  // R_LDR = (V_LDR / (V_in - V_LDR)) * R_fixed
+  ldrResistance = (ldrVoltage / (5.0 - ldrVoltage)) * fixedResistor;  
+  
+  // Map the LDR value to a PWM value (0 to 255)
+  int brightness = map(ldrValue, 0, 1023, 0, 255);
+  
+  // Set the LED brightness based on LDR value
+  analogWrite(ledPin, brightness);
+
+  // Print the LDR value and LED brightness for debugging (optional)
+  Serial.print("LDR Value: ");
+  Serial.print(ldrValue);
+  Serial.print(" LED Brightness: ");
+  Serial.println(brightness);
+  Serial.print("LDR Voltage: ");
+  Serial.print(ldrVoltage);
+  Serial.print(" V, LDR Resistance: ");
+  Serial.print(ldrResistance);
+  Serial.println(" ohms");
+
+  // Wait a short time before the next reading (optional)
+  delay(100);
+}
